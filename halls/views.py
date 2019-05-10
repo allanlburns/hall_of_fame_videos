@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from .models import Hall, Video
 from .forms import VideoForm, SearchForm
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.forms.utils import ErrorList
 import urllib
 import requests
@@ -27,7 +27,7 @@ def add_video(request, pk):
 
 	if request.method == 'POST':
 		# Create
-		filled_form = VideoForm(request.POST)
+		form = VideoForm(request.POST)
 		if form.is_valid():
 			video = Video()
 			video.hall = hall
@@ -46,7 +46,17 @@ def add_video(request, pk):
 				errors = form._errors.setdefault('url', ErrorList())
 				errors.append(' Needs to be a YouTube URL')
 
-	return render(request, 'halls/add_video.html', {'form':form, 'search_form':search_form, 'hall':home})
+	return render(request, 'halls/add_video.html', {'form':form, 'search_form':search_form, 'hall':hall})
+
+def video_search(request):
+	search_form = SearchForm(request.GET)
+	if search_form.is_valid():
+		# Parse the URL:
+		encoded_search_term = urllib.parse.quote(search_form.cleaned_data['search_term'])
+		# THIS IS WHERE THE MAGIC HAPPENS!!!!!:
+		response = requests.get(f'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q={ encoded_search_term }&key={ YOUTUBE_API_KEY }')	
+		return JsonResponse(response.json())
+	return JsonResponse({'error':'Not able to process form'})
 
 class SignUp(generic.CreateView):
 	form_class = UserCreationForm
