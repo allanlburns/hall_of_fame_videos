@@ -16,7 +16,8 @@ def home(request):
 	return render(request, 'halls/home.html')
 
 def dashboard(request):
-	return render(request, 'halls/dashboard.html')
+	halls = Hall.objects.filter(user=request.user)
+	return render(request, 'halls/dashboard.html', {'halls':halls})
 
 def add_video(request, pk):
 	form = VideoForm()
@@ -84,7 +85,7 @@ class CreateHall(generic.CreateView):
 	def form_valid(self, form):
 		form.instance.user = self.request.user
 		super(CreateHall, self).form_valid(form)
-		return redirect('home')
+		return redirect('dashboard')
 
 class DetailHall(generic.DetailView):
 	model = Hall
