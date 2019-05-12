@@ -9,6 +9,9 @@ verify_ssl = true
 django = "*"
 django-widget-tweaks = "*"
 requests = "*"
+gunicorn = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.6"
