@@ -14,7 +14,7 @@ SECRET_KEY = 'g^j3=-e=6-951m39$9i=ep)n@cl$d@3ssskdpeywko36l#dq44'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['tranquil-forest-15888.herokuapp.com']
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
